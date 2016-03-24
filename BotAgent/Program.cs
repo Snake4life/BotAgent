@@ -39,7 +39,7 @@ namespace BotAgent
                 if (currentProcess == null)
                 {
                     // first run
-                    log.Debug("Current process is null, try to init it");
+                    log.Debug("refreshProcessInfo: current process is null, try to init it");
                     currentProcess = tmpProcesses[0];
                     return true;
                 }
@@ -48,7 +48,7 @@ namespace BotAgent
                     )
                 {
                     // process hasn't changed
-                    log.Debug("Process hasn't changed");
+                    log.Debug("refreshProcessInfo: process hasn't changed");
                     tmpProcesses[0].Dispose();
                     return true;
 
@@ -56,7 +56,7 @@ namespace BotAgent
                 else if (
                     tmpProcesses[0].Id!= currentProcess.Id)
                 {
-                    log.Debug("We have new process, change data");
+                    log.Debug("refreshProcessInfo: we have new process, change data");
                     currentProcess.Dispose();
                     currentProcess = tmpProcesses[0];
 
@@ -64,7 +64,7 @@ namespace BotAgent
                 }
             }
 
-            log.Debug("Process is not found");
+            log.Debug("refreshProcessInfo: process is not found");
             return false;
             
         
@@ -85,7 +85,7 @@ namespace BotAgent
                 if (!isProcessFound)
                 {
                     // we haven't found any proccess with desired name, so we need to sleep
-                    log.Warn(String.Format("Process with name {0} is not found, waiting {1} ms", ConfigurationManager.AppSettings["botName"],
+                    log.Warn(String.Format("main: process with name {0} is not found, waiting {1} ms", ConfigurationManager.AppSettings["botName"],
                         ConfigurationManager.AppSettings["sleepIntervaIfBotDidntFound"])
                         );
 
@@ -99,7 +99,7 @@ namespace BotAgent
 
             var mainWindow = AutomationElement.FromHandle(currentProcess.MainWindowHandle);
 
-            log.Info(String.Format("Found {0} process, pid={1}",
+            log.Info(String.Format("main: found {0} process, pid={1}",
                 ConfigurationManager.AppSettings["botName"],
                 currentProcess.Id
                 )
@@ -118,7 +118,7 @@ namespace BotAgent
 
                     if (!isProcessFound)
                     {
-                        log.Info(String.Format("Process isn't found, wating"));
+                        log.Info(String.Format("main: process isn't found, wating"));
                         Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
 
                     }
@@ -128,12 +128,14 @@ namespace BotAgent
 
 
 
-                    log.Info(String.Format("Sleeping {0} ms before send statistic", ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
+
+
+                    log.Info(String.Format("main: sleeping {0} ms before send statistic", ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
                     Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
                 }
                 catch (Exception e)
                 {
-                    log.Error(String.Format("Error {0}, stacktrace: {1}", e.Message, e.StackTrace));
+                    log.Error(String.Format("main: error {0}, stacktrace: {1}", e.Message, e.StackTrace));
                 }
             }
 
