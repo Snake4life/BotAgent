@@ -24,38 +24,123 @@ namespace BotAgent
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string programVersion = "1.0";
 
+        private static Process currentProcess;
+        private static Process[] processes;
+
+
+        // return true if process is found and false otherwise
+        
+        static bool refreshProcessInfo(string processName)
+        {
+            Process[] tmpProcesses = Process.GetProcessesByName(processName);
+            
+            if (tmpProcesses.Length > 0)
+            {
+                if (currentProcess == null)
+                {
+                    // first run
+                    log.Debug("Current process is null, try to init it");
+                    currentProcess = tmpProcesses[0];
+                    return true;
+                }
+                else if (
+                    tmpProcesses[0].Id == currentProcess.Id
+                    )
+                {
+                    // process hasn't changed
+                    log.Debug("Process hasn't changed");
+                    tmpProcesses[0].Dispose();
+                    return true;
+
+                }
+                else if (
+                    tmpProcesses[0].Id!= currentProcess.Id)
+                {
+                    log.Debug("We have new process, change data");
+                    currentProcess.Dispose();
+                    currentProcess = tmpProcesses[0];
+
+                    return true;
+                }
+            }
+
+            log.Debug("Process is not found");
+            return false;
+            
+        
+        }
 
 
         static void Main(string[] args)
         {
+            
+            // init part
+            bool isProcessFound = false;
 
-
-            Process[] process = Process.GetProcessesByName(ConfigurationManager.AppSettings["botName"]);
-
-            while (process.Length == 0) 
+            do
             {
-                
-                // we haven't found any proccess with desired name, so we need to sleep
-                log.Warn(String.Format("Process with name {0} is not found, waiting {1} ms", ConfigurationManager.AppSettings["botName"],
-                    ConfigurationManager.AppSettings["sleepIntervaIfBotDidntFound"])
-                    );
+                // processes = Process.GetProcessesByName(ConfigurationManager.AppSettings["botName"]);
+            
+                isProcessFound = refreshProcessInfo(ConfigurationManager.AppSettings["botName"]);
+                if (!isProcessFound)
+                {
+                    // we haven't found any proccess with desired name, so we need to sleep
+                    log.Warn(String.Format("Process with name {0} is not found, waiting {1} ms", ConfigurationManager.AppSettings["botName"],
+                        ConfigurationManager.AppSettings["sleepIntervaIfBotDidntFound"])
+                        );
 
-                Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervaIfBotDidntFound"]));
-                
-                process = Process.GetProcessesByName(ConfigurationManager.AppSettings["botName"]);
+                    Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervaIfBotDidntFound"]));
 
-            } 
-            // there can be only one proccess of FulcrumBot
+                }
 
-            var mainWindow = AutomationElement.FromHandle(process[0].MainWindowHandle);
+
+            } while (!isProcessFound);
+
+
+            var mainWindow = AutomationElement.FromHandle(currentProcess.MainWindowHandle);
 
             log.Info(String.Format("Found {0} process, pid={1}",
                 ConfigurationManager.AppSettings["botName"],
-                process[0].Id
+                currentProcess.Id
                 )
                 );
 
+
+            // here is infinite loop
+
+            while (true)
+            {
+                try
+                {
+
+                    // before get statistic check if proccess is exist
+                    isProcessFound = refreshProcessInfo(ConfigurationManager.AppSettings["botName"]);
+
+                    if (!isProcessFound)
+                    {
+                        log.Info(String.Format("Process isn't found, wating"));
+                        Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
+
+                    }
+
+                    // get info from WPF application
+
+
+
+
+                    log.Info(String.Format("Sleeping {0} ms before send statistic", ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
+                    Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
+                }
+                catch (Exception e)
+                {
+                    log.Error(String.Format("Error {0}, stacktrace: {1}", e.Message, e.StackTrace));
+                }
+            }
+
+
+
 //            Console.ReadLine();
         }
+
     }
 }
