@@ -96,6 +96,15 @@ namespace BotAgent
 
             } while (!isProcessFound);
 
+            // even if the process is found wee need to wait some time
+
+            while (currentProcess.MainWindowHandle.Equals(IntPtr.Zero))
+            {
+                Thread.Sleep(100);
+                currentProcess.Refresh();
+            }
+
+
 
             var mainWindow = AutomationElement.FromHandle(currentProcess.MainWindowHandle);
 
