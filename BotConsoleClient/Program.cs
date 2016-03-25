@@ -11,12 +11,10 @@ namespace BotConsoleClient
         static void Main(string[] args)
         {
             ServiceReference1.ServiceClassClient client = new BotConsoleClient.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass");
-            Dictionary<string,string> currentStatus = client.getCurrentStat();
+            string resultRow = client.getCurrentStatByBotName("BotAgent_1234");
 
-            foreach (KeyValuePair<string, string> entry in currentStatus)
-            {
-                Console.WriteLine(entry.Key + "=>" + entry.Value);
-            }
+            Console.WriteLine(resultRow);
+
         }
     }
 }

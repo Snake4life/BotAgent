@@ -37,7 +37,6 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import namespace="http://tempuri.org/" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IServiceClass_saveStatistic_InputMessage">
@@ -46,20 +45,20 @@
   <wsdl:message name="IServiceClass_saveStatistic_OutputMessage">
     <wsdl:part name="parameters" element="tns:saveStatisticResponse" />
   </wsdl:message>
-  <wsdl:message name="IServiceClass_getCurrentStat_InputMessage">
-    <wsdl:part name="parameters" element="tns:getCurrentStat" />
+  <wsdl:message name="IServiceClass_getCurrentStatByBotName_InputMessage">
+    <wsdl:part name="parameters" element="tns:getCurrentStatByBotName" />
   </wsdl:message>
-  <wsdl:message name="IServiceClass_getCurrentStat_OutputMessage">
-    <wsdl:part name="parameters" element="tns:getCurrentStatResponse" />
+  <wsdl:message name="IServiceClass_getCurrentStatByBotName_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getCurrentStatByBotNameResponse" />
   </wsdl:message>
   <wsdl:portType name="IServiceClass">
     <wsdl:operation name="saveStatistic">
       <wsdl:input wsaw:Action="http://tempuri.org/IServiceClass/saveStatistic" message="tns:IServiceClass_saveStatistic_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IServiceClass/saveStatisticResponse" message="tns:IServiceClass_saveStatistic_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="getCurrentStat">
-      <wsdl:input wsaw:Action="http://tempuri.org/IServiceClass/getCurrentStat" message="tns:IServiceClass_getCurrentStat_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IServiceClass/getCurrentStatResponse" message="tns:IServiceClass_getCurrentStat_OutputMessage" />
+    <wsdl:operation name="getCurrentStatByBotName">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServiceClass/getCurrentStatByBotName" message="tns:IServiceClass_getCurrentStatByBotName_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServiceClass/getCurrentStatByBotNameResponse" message="tns:IServiceClass_getCurrentStatByBotName_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="NetTcpBinding_IServiceClass" type="tns:IServiceClass">
@@ -75,8 +74,8 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getCurrentStat">
-      <soap12:operation soapAction="http://tempuri.org/IServiceClass/getCurrentStat" style="document" />
+    <wsdl:operation name="getCurrentStatByBotName">
+      <soap12:operation soapAction="http://tempuri.org/IServiceClass/getCurrentStatByBotName" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -91,7 +90,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:8000/TcpBinding</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>WIN-5FTV01L741P\kot</Upn>
+          <Upn>samsung-note\kot</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

@@ -22,6 +22,8 @@ namespace BotMonitoringServer
             sh.AddServiceEndpoint(typeof(IMetadataExchange), MetadataExchangeBindings.CreateMexTcpBinding(), "mex");
             sh.AddServiceEndpoint(typeof(IServiceClass), tcpb, tcpa);
             sh.Open();
+            
+
             Console.ReadLine();
             sh.Close(); 
         }

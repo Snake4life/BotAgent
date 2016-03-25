@@ -13,13 +13,21 @@ namespace WCFService
     {
         [OperationContract]
         void saveStatistic (string botName,string rows);
-        [OperationContract] 
-        Dictionary<string,string> getCurrentStat();
+        [OperationContract]
+        string getCurrentStatByBotName(string botName);
     }
+
+
+    public static class DataContainer
+    {
+        public static Dictionary<string, string> data = new Dictionary<string, string>();
+    }
+    
 
     public class ServiceClass : IServiceClass
     {
-        public Dictionary<string, string> data = new Dictionary<string, string>();
+     
+        
 
         /// <summary>
         /// Save statistict about bot
@@ -28,21 +36,42 @@ namespace WCFService
         /// <param name="rows"></param>
         void IServiceClass.saveStatistic(string botName, string rows)
         {
+
+            Console.WriteLine("Save statistic " + DataContainer.data.Count);
+
             botName = botName.ToLower();
-            if (data.ContainsKey(botName))
+            if (DataContainer.data.ContainsKey(botName))
             {
-                data[botName] = rows;
+                DataContainer.data[botName] = rows;
+                Console.WriteLine("Update info");
             }
             else
             {
-                data.Add(botName, rows);
+                Console.WriteLine("Add info");
+                DataContainer.data.Add(botName, rows);
             }
         }
 
 
-        Dictionary<string, string> IServiceClass.getCurrentStat()
+        string IServiceClass.getCurrentStatByBotName(string botName)
         {
-            return data;
+            botName = botName.ToLower();
+
+            Console.WriteLine(DataContainer.data.Count);
+            Console.WriteLine(botName);
+
+            if (DataContainer.data.ContainsKey(botName))
+            {
+                Console.WriteLine("Get data");
+                return DataContainer.data[botName];
+            }
+            else
+            {
+                Console.WriteLine("Null");
+                return "";
+            }
+            // return data[botName];
+            
         }
 
  

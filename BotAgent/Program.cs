@@ -79,8 +79,6 @@ namespace BotAgent
 
         static void Main(string[] args)
         {
-            client = new BotAgent.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass"); 
-            
             // init part
             bool isProcessFound = false;
 
@@ -235,8 +233,17 @@ namespace BotAgent
                         }
 
                         // send data to service 
-                        client.saveStatistic("testBot1Name", currentStringWithData);
-                        // log.Info(String.Format("data info: {0}",ToDebugString(collectedInfo)));
+                        try
+                        {
+                            // we need instantenate client here
+                            client = new BotAgent.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass"); 
+                            client.saveStatistic(ConfigurationManager.AppSettings["botAgentName"], currentStringWithData);
+                            // log.Info(String.Format("data info: {0}",ToDebugString(collectedInfo)));
+                        }
+                        catch (Exception e)
+                        {
+                            log.Error(String.Format("Error  {0}, stacktrace: {1}", e.Message, e.StackTrace));
+                        }
 
 
                     }
