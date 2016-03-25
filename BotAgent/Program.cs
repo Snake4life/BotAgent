@@ -9,7 +9,6 @@ using System.Configuration;
 
 
 using System.Windows.Automation;
-
 using log4net;
 
 
@@ -17,7 +16,12 @@ using log4net;
 
 namespace BotAgent
 {
-    
+
+    // 
+    /// <summary>
+    /// Program to collect information from FulcrumBot.exe and send to service
+    /// we need to run this program with admin privilegies
+    /// </summary>
 
     class Program
     {
@@ -96,29 +100,14 @@ namespace BotAgent
 
             } while (!isProcessFound);
 
-            // even if the process is found wee need to wait some time
-
-            while (currentProcess.MainWindowHandle.Equals(IntPtr.Zero))
-            {
-                Thread.Sleep(100);
-                currentProcess.Refresh();
-            }
-
-
-
-            var mainWindow = AutomationElement.FromHandle(currentProcess.MainWindowHandle);
-
-            log.Info(String.Format("main: found {0} process, pid={1}",
-                ConfigurationManager.AppSettings["botName"],
-                currentProcess.Id
-                )
-                );
-
 
             // here is infinite loop
 
             while (true)
             {
+                Dictionary<string, string> collectedInfo = new Dictionary<string, string>();
+
+
                 try
                 {
 
@@ -131,13 +120,104 @@ namespace BotAgent
                         Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
 
                     }
+                    else
+                    {
+                        // get info from WPF application
+                        // even if the process is found wee need to wait some time
 
-                    // get info from WPF application
+                        while (currentProcess.MainWindowHandle.Equals(IntPtr.Zero))
+                        {
+                            Thread.Sleep(100);
+                            currentProcess.Refresh();
+                        }
+
+
+
+                        var mainWindow = AutomationElement.FromHandle(currentProcess.MainWindowHandle);
+
+                        log.Info(String.Format("main: found {0} process, pid={1}",
+                            ConfigurationManager.AppSettings["botName"],
+                            currentProcess.Id
+                            )
+                            );
+
+                        // get status bar info
+                        var statusBar = mainWindow.FindFirst(TreeScope.Children,
+                               new PropertyCondition(AutomationElement.ControlTypeProperty,
+                            System.Windows.Automation.ControlType.StatusBar));
+
+                        AutomationElement statusBarCurrentStatus = statusBar.FindFirst(
+                            TreeScope.Children,
+                                new PropertyCondition(AutomationElement.ControlTypeProperty,
+                                    System.Windows.Automation.ControlType.Text));
+
+                        string currentStatusBarValue = statusBarCurrentStatus.Current.Name.ToString();
+
+                        collectedInfo.Add("currentStatusBarValue", currentStatusBarValue);
+
+                        log.Warn(string.Format("data: status bar value: {0}", currentStatusBarValue));
+
+
+                        // get datagrid info
+                        var dataGrid = mainWindow.FindFirst(TreeScope.Children,
+                            new PropertyCondition(AutomationElement.ControlTypeProperty,
+                                System.Windows.Automation.ControlType.DataGrid));
+
+                        GridPattern patternForGrid = GetGridPattern(dataGrid);
+
+                        // int rowCount = patternForGrid.Current.RowCount;
+
+                        int currentRow = 0;
+
+                        // go trough all rows and collect information
+                        foreach (AutomationElement row in dataGrid.FindAll(TreeScope.Descendants,
+                                        new PropertyCondition(AutomationElement.ClassNameProperty, "DataGridRow"))
+                                    )
+                        {
+                            // now go through all cells
+                            int currentField = 0;
+
+                            string dataLine = "";
+
+                            foreach (AutomationElement child in row.FindAll(
+                                          TreeScope.Descendants,
+                                          new PropertyCondition(AutomationElement.ClassNameProperty, "DataGridCell"))
+                                          )
+                            {
+                                
+                                currentField++;
 
 
 
 
+                                // dataLine += child.Current.Name.ToString();
 
+                                // log.Info(child.Current.Name.ToString());
+
+                                ValuePattern pattern = child.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
+
+                                dataLine += pattern.Current.Value + " = ";
+                                
+
+                                // 0 - run, 1 - key, 2 - region, 3 - username, 4 - password, 5 - XP Boost, 6 - Game, 7 - Spell1, 8 - Spell2 , 9- Summoner, 10 - Lvl, 11 - Total IP, 12 - Total RP, 13 - status
+                                // data[currentField] = child.Current.Name.ToString();
+
+                                if (currentField == 13)
+                                {
+                                    collectedInfo.Add(currentRow.ToString(), dataLine);
+                                }
+
+                                
+                            }
+
+                            currentRow++;
+                            log.Info(dataLine);
+                        }
+
+                        // log.Info(String.Format("data info: {0}",ToDebugString(collectedInfo)));
+
+
+                    }
 
                     log.Info(String.Format("main: sleeping {0} ms before send statistic", ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
                     Thread.Sleep(Int32.Parse(ConfigurationManager.AppSettings["sleepIntervalBetweenSendStat"]));
@@ -148,10 +228,52 @@ namespace BotAgent
                 }
             }
 
-
-
 //            Console.ReadLine();
         }
+    
 
+        /// <summary>
+        /// get grid pattern to work with
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+
+        public static GridPattern GetGridPattern(AutomationElement element)
+        {
+            object currentPattern;
+            if (!element.TryGetCurrentPattern(GridPattern.Pattern, out currentPattern))
+            {
+                try
+                {
+                    throw new Exception(string.Format("Element with AutomationId '{0}' and Name '{1}' does not support the GridPattern.",
+                     element.Current.AutomationId, element.Current.Name));
+                }
+                catch (Exception e)
+                {
+                    log.Error(string.Format("{0} {1}", e.Message, e.StackTrace));
+                    Console.ReadLine();
+                    Environment.Exit(0);
+
+                }
+            }
+            return currentPattern as GridPattern;
+        }
+
+        /// <summary>
+        /// Convert dictinary to string
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        /// 
+
+        
+        public static string ToDebugString<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
+        {
+            return "{" + string.Join(",", dictionary.Select(kv => kv.Key.ToString() + "=" + kv.Value.ToString()).ToArray()) + "}";
+        }
+         
     }
+
 }
