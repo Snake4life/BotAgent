@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace BotAgent
 
         private static Process currentProcess;
         private static Process[] processes;
+        private static ServiceReference1.ServiceClassClient client;
 
 
         // return true if process is found and false otherwise
@@ -77,6 +79,7 @@ namespace BotAgent
 
         static void Main(string[] args)
         {
+            client = new BotAgent.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass"); 
             
             // init part
             bool isProcessFound = false;
@@ -169,6 +172,8 @@ namespace BotAgent
 
                         int currentRow = 0;
 
+                        ArrayList rowsData = new ArrayList();
+
                         // go trough all rows and collect information
                         foreach (AutomationElement row in dataGrid.FindAll(TreeScope.Descendants,
                                         new PropertyCondition(AutomationElement.ClassNameProperty, "DataGridRow"))
@@ -196,7 +201,7 @@ namespace BotAgent
 
                                 ValuePattern pattern = child.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
 
-                                dataLine += pattern.Current.Value + " = ";
+                                dataLine += pattern.Current.Value + "\t";
                                 
 
                                 // 0 - run, 1 - key, 2 - region, 3 - username, 4 - password, 5 - XP Boost, 6 - Game, 7 - Spell1, 8 - Spell2 , 9- Summoner, 10 - Lvl, 11 - Total IP, 12 - Total RP, 13 - status
@@ -205,6 +210,7 @@ namespace BotAgent
                                 if (currentField == 13)
                                 {
                                     collectedInfo.Add(currentRow.ToString(), dataLine);
+                                    rowsData.Add(dataLine);
                                 }
 
                                 
@@ -212,8 +218,24 @@ namespace BotAgent
 
                             currentRow++;
                             log.Info(dataLine);
+
+                            
                         }
 
+
+                        // format is like
+                        /*
+                            bot1, "row1data1\t row1data2 \t \n row2data1 \t row2data2 and so on
+                         */
+                        string currentStringWithData = "";
+                        foreach (string row in rowsData)
+                        {
+                            currentStringWithData += row;
+                            currentStringWithData += "\n";
+                        }
+
+                        // send data to service 
+                        client.saveStatistic("testBot1Name", currentStringWithData);
                         // log.Info(String.Format("data info: {0}",ToDebugString(collectedInfo)));
 
 

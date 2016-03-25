@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotAgent", "BotAgent\BotAgent.csproj", "{06DA79EB-A43A-497B-A83E-48B7DC8129AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFService", "WCFService\WCFService.csproj", "{1FBE2B03-3552-40E0-B05F-067042B5C8A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotMonitoringServer", "BotMonitoringServer\BotMonitoringServer.csproj", "{8AED4987-B0F0-4486-A50A-FB6E09FBA4B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotConsoleClient", "BotConsoleClient\BotConsoleClient.csproj", "{EFD94328-C554-4516-A2EC-452B2A346366}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +19,18 @@ Global
 		{06DA79EB-A43A-497B-A83E-48B7DC8129AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06DA79EB-A43A-497B-A83E-48B7DC8129AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06DA79EB-A43A-497B-A83E-48B7DC8129AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FBE2B03-3552-40E0-B05F-067042B5C8A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FBE2B03-3552-40E0-B05F-067042B5C8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FBE2B03-3552-40E0-B05F-067042B5C8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FBE2B03-3552-40E0-B05F-067042B5C8A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AED4987-B0F0-4486-A50A-FB6E09FBA4B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AED4987-B0F0-4486-A50A-FB6E09FBA4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AED4987-B0F0-4486-A50A-FB6E09FBA4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AED4987-B0F0-4486-A50A-FB6E09FBA4B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFD94328-C554-4516-A2EC-452B2A346366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFD94328-C554-4516-A2EC-452B2A346366}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFD94328-C554-4516-A2EC-452B2A346366}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFD94328-C554-4516-A2EC-452B2A346366}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

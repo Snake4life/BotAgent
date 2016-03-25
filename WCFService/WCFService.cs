@@ -12,24 +12,40 @@ namespace WCFService
     public interface IServiceClass
     {
         [OperationContract]
-        void saveStatistic (int botId,ArrayList rows);
+        void saveStatistic (string botName,string rows);
         [OperationContract] 
-        Dictionary<string,ArrayList> getCurrentStat();
+        Dictionary<string,string> getCurrentStat();
     }
 
     public class ServiceClass : IServiceClass
     {
-        public
+        public Dictionary<string, string> data = new Dictionary<string, string>();
 
-        void IServiceClass.saveStatistic()
+        /// <summary>
+        /// Save statistict about bot
+        /// </summary>
+        /// <param name="botName"></param>
+        /// <param name="rows"></param>
+        void IServiceClass.saveStatistic(string botName, string rows)
         {
-            return "Hello world!";
+            botName = botName.ToLower();
+            if (data.ContainsKey(botName))
+            {
+                data[botName] = rows;
+            }
+            else
+            {
+                data.Add(botName, rows);
+            }
         }
 
-        int IServiceClass.MultiplyNumbers(int firstvalue, int secondvalue)
+
+        Dictionary<string, string> IServiceClass.getCurrentStat()
         {
-            return firstvalue * secondvalue;
+            return data;
         }
+
+ 
 
     }
 }
