@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0502a6f6-fd8e-4a83-a8ed-ed752f03ea2c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="1a16c694-b182-4344-a30a-0e8fda721552" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,10 +22,10 @@
     <MetadataSource Address="net.tcp://localhost:8000/TcpBinding/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="dbe14aac-dec3-455d-a88b-4e06105032db" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="e616de95-ca30-404c-9698-24aceb149987" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="694e2f71-b410-46b2-ac0b-30d16fe5baec" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
-    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="450fc536-065b-48ef-978e-27f422f7d4f0" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="18675a44-73f5-4c84-a95f-7709469a1f9b" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="4d13263a-faf0-456c-9c7e-3def788f1ab7" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="e94d074e-9577-41bc-ad30-e480814fb3e3" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="46bfcfda-2aff-4075-866f-01de91780b41" SourceId="1" SourceUrl="net.tcp://localhost:8000/TcpBinding/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

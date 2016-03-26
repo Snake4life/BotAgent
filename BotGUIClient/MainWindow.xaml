@@ -1,0 +1,63 @@
+﻿<Window x:Class="BotGUIClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Bots Monitoring tool" Height="300" Width="1000">
+
+    <Window.Resources>
+        <CollectionViewSource x:Key="BotsStatisticSource" CollectionViewType="ListCollectionView" />
+    </Window.Resources>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 5">
+            <Label>Service IP address</Label>
+            <TextBox Width="100" Margin="4 0" VerticalAlignment="Center" Name="serviceIPAddress"></TextBox>
+            <!-- <Button Name="getInfo" Width="70" VerticalAlignment="Center">Get info</Button> -->
+                <!--
+            <Label>Auto refresh every (min)</Label>
+            <TextBox Width="50" VerticalAlignment="Center" Name="refreshEvery"></TextBox>
+            -->
+            <Button Name="refresh" Width="100"  VerticalAlignment="Center" Margin="10 0" Click="refresh_Click">Refresh now</Button>
+        </StackPanel>
+
+        
+
+            <DataGrid Grid.Row="1" DataContext="{StaticResource BotsStatisticSource}"  IsReadOnly="True"
+                                                                        ItemsSource="{Binding}"
+                                                            AutoGenerateColumns="False"
+                                                              CanUserAddRows="False"
+                                                      Padding="0 3"
+                                                      GridLinesVisibility="All" Margin="0" 
+                  Name="BotsGrid"
+                  >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=BotName,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Bot name"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Key,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Key"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=UserName,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="UserName"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Password,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Password"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=XPBoost,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="XPBoost"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Game,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Game"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Spell1,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Spell1"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Spell2,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Spell2"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Summoner,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Summoner"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Lvl,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Lvl"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=TotalIP,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="TotalIP"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=TotalRP,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="TotalRP"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Status,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Header="Status"></DataGridTextColumn>
+
+            </DataGrid.Columns>
+
+            </DataGrid>
+        
+
+    </Grid>
+
+
+</Window>

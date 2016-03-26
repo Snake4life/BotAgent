@@ -15,6 +15,9 @@ namespace WCFService
         void saveStatistic (string botName,string rows);
         [OperationContract]
         string getCurrentStatByBotName(string botName);
+
+        [OperationContract]
+        string[] getBotsLlist();
     }
 
 
@@ -26,9 +29,13 @@ namespace WCFService
 
     public class ServiceClass : IServiceClass
     {
-     
+        string[] IServiceClass.getBotsLlist()
+        {
+            List<string> keysList = new List<string>(DataContainer.data.Keys);
+            return keysList.ToArray();
+        }
         
-
+        
         /// <summary>
         /// Save statistict about bot
         /// </summary>
@@ -62,7 +69,7 @@ namespace WCFService
 
             if (DataContainer.data.ContainsKey(botName))
             {
-                Console.WriteLine("Get data");
+                Console.WriteLine("Get data" + DataContainer.data[botName]);
                 return DataContainer.data[botName];
             }
             else

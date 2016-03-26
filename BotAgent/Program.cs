@@ -205,8 +205,9 @@ namespace BotAgent
                                 // 0 - run, 1 - key, 2 - region, 3 - username, 4 - password, 5 - XP Boost, 6 - Game, 7 - Spell1, 8 - Spell2 , 9- Summoner, 10 - Lvl, 11 - Total IP, 12 - Total RP, 13 - status
                                 // data[currentField] = child.Current.Name.ToString();
 
-                                if (currentField == 13)
+                                if (currentField == 14)
                                 {
+                                    // if we found last columnn
                                     collectedInfo.Add(currentRow.ToString(), dataLine);
                                     rowsData.Add(dataLine);
                                 }
@@ -215,7 +216,7 @@ namespace BotAgent
                             }
 
                             currentRow++;
-                            log.Info(dataLine);
+                            // log.Info(dataLine);
 
                             
                         }
@@ -226,11 +227,16 @@ namespace BotAgent
                             bot1, "row1data1\t row1data2 \t \n row2data1 \t row2data2 and so on
                          */
                         string currentStringWithData = "";
+
+                        log.Info(rowsData);
+
                         foreach (string row in rowsData)
                         {
                             currentStringWithData += row;
                             currentStringWithData += "\n";
                         }
+
+                        // log.Info(currentStringWithData);
 
                         // send data to service 
                         try

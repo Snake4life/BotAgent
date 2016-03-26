@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BotConsoleClient.ServiceReference1 {
+namespace BotGUIClient.ServiceReference1 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -35,12 +35,12 @@ namespace BotConsoleClient.ServiceReference1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IServiceClassChannel : BotConsoleClient.ServiceReference1.IServiceClass, System.ServiceModel.IClientChannel {
+    public interface IServiceClassChannel : BotGUIClient.ServiceReference1.IServiceClass, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServiceClassClient : System.ServiceModel.ClientBase<BotConsoleClient.ServiceReference1.IServiceClass>, BotConsoleClient.ServiceReference1.IServiceClass {
+    public partial class ServiceClassClient : System.ServiceModel.ClientBase<BotGUIClient.ServiceReference1.IServiceClass>, BotGUIClient.ServiceReference1.IServiceClass {
         
         public ServiceClassClient() {
         }
