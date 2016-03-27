@@ -22,6 +22,22 @@ namespace BotGUIClient
         private string _TotalIP;
         private string _TotalRP;
         private string _Status;
+        private string _StatusBar;
+        private string _EventDT;
+
+
+        public string EventDT
+        {
+            get { return _EventDT; }
+            set { _EventDT = value; OnPropertyChanged("EventDT"); }
+        }
+
+
+        public string StatusBar
+        {
+            get { return _StatusBar; }
+            set { _StatusBar = value; OnPropertyChanged("StatusBar"); }
+        }
 
 
         public string Status

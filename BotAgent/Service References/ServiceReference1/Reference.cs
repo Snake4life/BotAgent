@@ -26,6 +26,12 @@ namespace BotAgent.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceClass/getCurrentStatByBotName", ReplyAction="http://tempuri.org/IServiceClass/getCurrentStatByBotNameResponse")]
         System.Threading.Tasks.Task<string> getCurrentStatByBotNameAsync(string botName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceClass/getBotsLlist", ReplyAction="http://tempuri.org/IServiceClass/getBotsLlistResponse")]
+        string[] getBotsLlist();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceClass/getBotsLlist", ReplyAction="http://tempuri.org/IServiceClass/getBotsLlistResponse")]
+        System.Threading.Tasks.Task<string[]> getBotsLlistAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -69,6 +75,14 @@ namespace BotAgent.ServiceReference1 {
         
         public System.Threading.Tasks.Task<string> getCurrentStatByBotNameAsync(string botName) {
             return base.Channel.getCurrentStatByBotNameAsync(botName);
+        }
+        
+        public string[] getBotsLlist() {
+            return base.Channel.getBotsLlist();
+        }
+        
+        public System.Threading.Tasks.Task<string[]> getBotsLlistAsync() {
+            return base.Channel.getBotsLlistAsync();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 
 using System.Windows.Automation;
@@ -228,13 +229,40 @@ namespace BotAgent
                          */
                         string currentStringWithData = "";
 
-                        log.Info(rowsData);
+                        
 
+
+                        
                         foreach (string row in rowsData)
                         {
-                            currentStringWithData += row;
+                            DateTime myDateTime = DateTime.Now;
+                            string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                            
+
+                            string rowForSending = Regex.Replace(row, @"\t\s*$", "");
+
+                            currentStringWithData += rowForSending;
+                            /*
+                            if (firstTime)
+                            {
+                                currentStringWithData += currentStatusBarValue;
+                                firstTime = false;
+                            }
+                            else
+                            {
+                                currentStringWithData += "\t" + currentStatusBarValue;
+                            
+                            }
+                             */
+                            currentStringWithData += "\t" + currentStatusBarValue;
+
+                            currentStringWithData += "\t" + myDateTime;
                             currentStringWithData += "\n";
+
                         }
+
+                        log.Info(currentStringWithData);
 
                         // log.Info(currentStringWithData);
 
