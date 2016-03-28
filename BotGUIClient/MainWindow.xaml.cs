@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using System.Threading;
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,6 +28,8 @@ namespace BotGUIClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+    
     public partial class MainWindow : Window
     {
 
@@ -45,9 +50,9 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
             set { SetValue(ServiceIPAddressProperty, value); }
         }
 
+
         
-        
-        public ObservableCollection<BotItem> BotItemsList;
+        // public ObservableCollection<BotItem> BotItemsList;
 
 
         public MainWindow()
@@ -55,20 +60,63 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
             InitializeComponent();
         }
 
-        private void refresh_Click(object sender, RoutedEventArgs e)
+
+        private void BackgroundWorkerProgressChanged(object Sender, ProgressChangedEventArgs E)
         {
 
+            ObservableCollection<BotItem> BotItemsList = (ObservableCollection<BotItem>)((CollectionViewSource)(FindResource("BotsStatisticSource"))).Source;
 
-            BotItemsList = new ObservableCollection<BotItem>();
+            object [] data = (object[])E.UserState;
+            string bot = (string) data[0];
+            string[] rowsData = (string[]) data[1];
+            // ObservableCollection<BotItem> BotItemsList = new  ObservableCollection<BotItem> ();
 
-            // get info from server about bots
+            foreach (string rowData in rowsData)
+            {
+                string[] colData = Regex.Split(rowData, "\t");
+
+
+
+                if (colData.Length > 1)
+                {
+
+                    BotItemsList.Add(new BotItem
+                    {
+                        BotName = bot,
+                        Key = colData[1],
+                        UserName = colData[3],
+                        Password = colData[4],
+                        XPBoost = Int32.Parse(colData[5]),
+                        Game = colData[6],
+                        Spell1 = colData[7],
+                        Spell2 = colData[8],
+                        Summoner = colData[9],
+                        Lvl = Int32.Parse(colData[10]),
+                        TotalIP = Int32.Parse(colData[11]),
+                        TotalRP = Int32.Parse(colData[12]),
+                        Status = colData[13],
+                        StatusBar = colData[14],
+                        EventDT = colData[15]
+                    }
+                        );
+                }
+            }
+
             
-            StatusBarText.Text = "Connecting to service";
 
-            /*
-            string ipAddress = serviceIPAddress.Text;
-            ipAddress = ipAddress.Trim();
-             */
+            // StatusBarText.Text = "Connecting to service";
+            // StatusText = "Connecting to service";
+
+
+
+        }
+
+
+        private void BackgroundWorkerDoWork(object Sender, DoWorkEventArgs E)
+        {
+
+            BackgroundWorker Worker = Sender as BackgroundWorker;
+
 
             ServiceReference1.ServiceClassClient client;
 
@@ -77,59 +125,77 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
                 client = new BotGUIClient.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass");
 
 
-            StatusBarText.Text = "Get bots list";
-            string[] botsList = client.getBotsLlist();
+                
 
-             foreach (string bot in botsList)
-             {
-                 StatusBarText.Text = String.Format("Get info about bot with name {0}",bot);
-                 string botRowsData = client.getCurrentStatByBotName(bot);
 
-                string []rowsData = Regex.Split( botRowsData, "\n");
+                string[] botsList = client.getBotsLlist();
 
-                foreach (string rowData in rowsData)
-                 {
-                     string []colData = Regex.Split(rowData,"\t");
+                int currentBot = 0;
 
-                     if (colData.Length > 1)
-                     {
+                foreach (string bot in botsList)
+                {
+                    // StatusText = String.Format("Get info about bot with name {0}", bot);
+                    string botRowsData = client.getCurrentStatByBotName(bot);
 
-                         BotItemsList.Add(new BotItem
-                                 {
-                                     BotName = bot,
-                                     Key = colData[1],
-                                     UserName = colData[3],
-                                     Password = colData[4],
-                                     XPBoost = Int32.Parse(colData[5]),
-                                     Game = colData[6],
-                                     Spell1 = colData[7],
-                                     Spell2 = colData[8],
-                                     Summoner = colData[9],
-                                     Lvl = Int32.Parse(colData[10]),
-                                     TotalIP = Int32.Parse(colData[11]),
-                                     TotalRP = Int32.Parse(colData[12]),
-                                     Status = colData[13], 
-                                     StatusBar = colData[14],
-                                     EventDT = colData[15]
-                                 }
-                             );
-                     }
-                 }
-            
+                    string[] rowsData = Regex.Split(botRowsData, "\n");
 
+                    Worker.ReportProgress(currentBot, new Object[2]{bot,rowsData});
+
+                    currentBot++;
                 }
 
                 // get datagrid source from xaml
-                CollectionViewSource BotsStatisticSource = (CollectionViewSource)(FindResource("BotsStatisticSource"));
-                BotsStatisticSource.Source = BotItemsList;
+                // CollectionViewSource BotsStatisticSource = (CollectionViewSource)(FindResource("BotsStatisticSource"));
+                //                BotItemsListSource.Source = BotItemsList;
 
-                StatusBarText.Text = "Finish";
+                // StatusText = "Finish";
 
             }
             catch (Exception eInfo)
             {
-                StatusBarText.Text = "Error " + eInfo.Message;
+                // StatusText = "Error " + eInfo.Message;
             }
+
+
+            
+
+            // Debug.WriteLine("BackgroundWorkerDoWork");
+
+
+        }
+
+
+        private void refresh_Click(object sender, RoutedEventArgs e)
+        {
+            ObservableCollection<BotItem> BotItemsList = new ObservableCollection<BotItem>();
+            CollectionViewSource BotItemsListSource = (CollectionViewSource)FindResource("BotsStatisticSource");
+            BotItemsListSource.Source = BotItemsList;
+            //BotItemsList = new ObservableCollection<BotItem>();
+
+            
+            BackgroundWorker Worker = new BackgroundWorker();
+            Worker.WorkerReportsProgress = true;
+            Worker.ProgressChanged += BackgroundWorkerProgressChanged;
+            Worker.DoWork += BackgroundWorkerDoWork;
+
+            StatusText = "Get bots list";
+
+            if (Worker.IsBusy != true)
+            {
+            //    Worker.RunWorkerAsync(BotItemsList);
+                Worker.RunWorkerAsync();
+            }
+
+
+            // get info from server about bots
+            
+            
+
+            /*
+            string ipAddress = serviceIPAddress.Text;
+            ipAddress = ipAddress.Trim();
+             */
+
 
             
             }

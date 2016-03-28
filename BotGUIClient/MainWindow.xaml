@@ -4,7 +4,7 @@
                 xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 
-                
+                            Name="ThisWindow"
         Title="Bots Monitoring tool" Height="300" Width="1000">
 
     <Window.Resources>
@@ -70,7 +70,7 @@
         
         <StatusBar Grid.Row="2">
             <Label>Status:</Label>
-            <TextBlock Name="StatusBarText" VerticalAlignment="Center" Text="{Binding ElementName=ThisWindow, Path=StatusText,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+            <TextBlock  VerticalAlignment="Center" Text="{Binding ElementName=ThisWindow, Path=StatusText,NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
 
         </StatusBar>
         
