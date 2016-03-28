@@ -66,43 +66,57 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
 
             ObservableCollection<BotItem> BotItemsList = (ObservableCollection<BotItem>)((CollectionViewSource)(FindResource("BotsStatisticSource"))).Source;
 
-            object [] data = (object[])E.UserState;
-            string bot = (string) data[0];
-            string[] rowsData = (string[]) data[1];
-            // ObservableCollection<BotItem> BotItemsList = new  ObservableCollection<BotItem> ();
+            object[] data = (object[])E.UserState;
 
-            foreach (string rowData in rowsData)
+            if (data.Length > 2)
             {
-                string[] colData = Regex.Split(rowData, "\t");
+                // we have informatical or error message
+                StatusText = (string) data[3];
 
-
-
-                if (colData.Length > 1)
-                {
-
-                    BotItemsList.Add(new BotItem
-                    {
-                        BotName = bot,
-                        Key = colData[1],
-                        UserName = colData[3],
-                        Password = colData[4],
-                        XPBoost = Int32.Parse(colData[5]),
-                        Game = colData[6],
-                        Spell1 = colData[7],
-                        Spell2 = colData[8],
-                        Summoner = colData[9],
-                        Lvl = Int32.Parse(colData[10]),
-                        TotalIP = Int32.Parse(colData[11]),
-                        TotalRP = Int32.Parse(colData[12]),
-                        Status = colData[13],
-                        StatusBar = colData[14],
-                        EventDT = colData[15]
-                    }
-                        );
-                }
             }
+            else
+            {
 
-            
+                string bot = (string)data[0];
+                string[] rowsData = (string[])data[1];
+
+                StatusText = String.Format("Adding info, bot {0}",bot);
+
+
+                // ObservableCollection<BotItem> BotItemsList = new  ObservableCollection<BotItem> ();
+
+                foreach (string rowData in rowsData)
+                {
+                    string[] colData = Regex.Split(rowData, "\t");
+
+
+
+                    if (colData.Length > 1)
+                    {
+
+                        BotItemsList.Add(new BotItem
+                        {
+                            BotName = bot,
+                            Key = colData[1],
+                            UserName = colData[3],
+                            Password = colData[4],
+                            XPBoost = Int32.Parse(colData[5]),
+                            Game = colData[6],
+                            Spell1 = colData[7],
+                            Spell2 = colData[8],
+                            Summoner = colData[9],
+                            Lvl = Int32.Parse(colData[10]),
+                            TotalIP = Int32.Parse(colData[11]),
+                            TotalRP = Int32.Parse(colData[12]),
+                            Status = colData[13],
+                            StatusBar = colData[14],
+                            EventDT = colData[15]
+                        }
+                            );
+                    }
+                }
+
+            }
 
             // StatusBarText.Text = "Connecting to service";
             // StatusText = "Connecting to service";
@@ -117,16 +131,15 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
 
             BackgroundWorker Worker = Sender as BackgroundWorker;
 
+            Worker.ReportProgress(0, new Object[4] { 0, 0, 0, "Start" });
+            
+
 
             ServiceReference1.ServiceClassClient client;
 
             try
             {
                 client = new BotGUIClient.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass");
-
-
-                
-
 
                 string[] botsList = client.getBotsLlist();
 
@@ -136,7 +149,6 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
                 {
                     // StatusText = String.Format("Get info about bot with name {0}", bot);
                     string botRowsData = client.getCurrentStatByBotName(bot);
-
                     string[] rowsData = Regex.Split(botRowsData, "\n");
 
                     Worker.ReportProgress(currentBot, new Object[2]{bot,rowsData});
@@ -148,11 +160,13 @@ DependencyProperty.Register("ServiceIPAddress", typeof(string), typeof(MainWindo
                 // CollectionViewSource BotsStatisticSource = (CollectionViewSource)(FindResource("BotsStatisticSource"));
                 //                BotItemsListSource.Source = BotItemsList;
 
+                Worker.ReportProgress(0, new Object[4] { 0, 0, 0, "Finish" });
                 // StatusText = "Finish";
 
             }
             catch (Exception eInfo)
             {
+                Worker.ReportProgress(0, new Object[4] { 0,0,1,eInfo.Message});
                 // StatusText = "Error " + eInfo.Message;
             }
 
