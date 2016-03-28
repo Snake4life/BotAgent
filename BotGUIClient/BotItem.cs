@@ -13,14 +13,14 @@ namespace BotGUIClient
         private string _Key;
         private string _UserName;
         private string _Password;
-        private string _XPBoost;
+        private Int32 _XPBoost;
         private string _Game;
         private string _Spell1;
         private string _Spell2;
         private string _Summoner;
-        private string _Lvl;
-        private string _TotalIP;
-        private string _TotalRP;
+        private int _Lvl;
+        private Int32 _TotalIP;
+        private Int32 _TotalRP;
         private string _Status;
         private string _StatusBar;
         private string _EventDT;
@@ -47,14 +47,14 @@ namespace BotGUIClient
         }
 
 
-        public string TotalRP
+        public Int32 TotalRP
         {
             get { return _TotalRP; }
             set { _TotalRP = value; OnPropertyChanged("TotalRP"); }
         }
 
         
-        public string TotalIP
+        public Int32 TotalIP
         {
             get { return _TotalIP; }
             set { _TotalIP = value; OnPropertyChanged("TotalIP"); }
@@ -62,7 +62,7 @@ namespace BotGUIClient
 
 
 
-        public string Lvl
+        public Int32 Lvl
         {
             get { return _Lvl; }
             set { _Lvl = value; OnPropertyChanged("Lvl"); }
@@ -99,7 +99,7 @@ namespace BotGUIClient
         }
 
         
-        public string XPBoost
+        public Int32 XPBoost
         {
             get { return _XPBoost; }
             set { _XPBoost = value; OnPropertyChanged("XPBoost"); }

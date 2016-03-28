@@ -257,7 +257,7 @@ namespace BotAgent
                              */
                             currentStringWithData += "\t" + currentStatusBarValue;
 
-                            currentStringWithData += "\t" + myDateTime;
+                            currentStringWithData += "\t" + sqlFormattedDate;
                             currentStringWithData += "\n";
 
                         }
