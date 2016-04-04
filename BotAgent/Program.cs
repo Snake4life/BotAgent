@@ -28,7 +28,7 @@ namespace BotAgent
     class Program
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static readonly string programVersion = "1.0";
+        private static readonly string programVersion = "1.1";
 
         private static Process currentProcess;
         private static Process[] processes;
@@ -82,6 +82,8 @@ namespace BotAgent
         {
             // init part
             bool isProcessFound = false;
+
+            log.Info(String.Format("Start program version {0}", programVersion));
 
             do
             {
@@ -270,8 +272,21 @@ namespace BotAgent
                         try
                         {
                             // we need instantenate client here
-                            client = new BotAgent.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass"); 
-                            client.saveStatistic(ConfigurationManager.AppSettings["botAgentName"], currentStringWithData);
+                            try
+                            {
+                                client = new BotAgent.ServiceReference1.ServiceClassClient("NetTcpBinding_IServiceClass");
+                                client.saveStatistic(ConfigurationManager.AppSettings["botAgentName"], currentStringWithData);
+
+                                if (client.State != System.ServiceModel.CommunicationState.Faulted)
+                                {
+                                    client.Close();
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                client.Abort();
+                            }
+
                             // log.Info(String.Format("data info: {0}",ToDebugString(collectedInfo)));
                         }
                         catch (Exception e)
